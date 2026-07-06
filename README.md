@@ -1,41 +1,41 @@
-# Quiz - valos ideju online kvizrendszer
+# Quiz - valós idejű online kvízrendszer
 
-Egy teljes stackes, Kahoot jellegu kvizalkalmazas, ahol a hitelesitett felhasznalok sajat kvizeket hozhatnak letre es vezérelhetnek, a resztvevok pedig PIN-koddal csatlakozhatnak az elo jatekhoz. A rendszer REST API-t, JWT alapu autentikaciot, SignalR valos ideju kommunikaciot, chatet, lapozott adatkezelest es automatizalt tesztcsomagot tartalmaz.
+Egy full-stack, Kahoot jellegű kvízalkalmazás, ahol a hitelesített felhasználók saját kvízeket hozhatnak létre és vezérelhetnek, a résztvevők pedig PIN-kóddal csatlakozhatnak az élő játékhoz. A rendszer REST API-t, JWT alapú autentikációt, SignalR valós idejű kommunikációt, élő chatet, lapozott adatkezelést és automatizált tesztcsomagot tartalmaz.
 
-## Projekt celja
+## Projekt célja
 
-A projekt celja egy olyan kliens-szerver architekturaju webalkalmazas megvalositasa volt, amely valos idoben kezeli egy kviz teljes eletciklusat:
+A projekt célja egy olyan kliens-szerver architektúrájú webalkalmazás megvalósítása volt, amely valós időben kezeli egy kvíz teljes életciklusát:
 
-- felhasznalo regisztracio es bejelentkezes,
-- sajat kvizek letrehozasa kerdesekkel es valaszokkal,
-- kviz publikalasa hatjegyu PIN-koddal,
-- resztvevok csatlakozasa becenevvel,
-- kerdesek inditasa, lezarasa es leptetese a kvizgazda altal,
-- helyes valasz megjelenitese a kerdes lezarasa utan,
-- elo chat a resztvevok kozott,
-- valos ideju allapotfrissites SignalR-rel.
+- felhasználói regisztráció és bejelentkezés,
+- saját kvízek létrehozása kérdésekkel és válaszokkal,
+- kvíz publikálása hatjegyű PIN-kóddal,
+- résztvevők csatlakozása becenévvel,
+- kérdések indítása, lezárása és léptetése a kvízgazda által,
+- helyes válasz megjelenítése a kérdés lezárása után,
+- élő chat a résztvevők között,
+- valós idejű állapotfrissítés SignalR-rel.
 
-## Fo funkciok
+## Fő funkciók
 
-### Kvizgazda
+### Kvízgazda
 
-- Fiok letrehozasa es JWT alapu bejelentkezes.
-- Sajat kvizek listazasa lapozassal.
-- Uj kviz letrehozasa 1-20 kerdessel.
-- Kviz publikalasa automatikusan general PIN-koddal.
-- Elo jatek inditasa, aktualis kerdes lezarasa, kovetkezo kerdesre leptetes.
-- Saját kviz reszletes adatainak megtekintese.
+- Fiók létrehozása és JWT alapú bejelentkezés.
+- Saját kvízek listázása lapozással.
+- Új kvíz létrehozása 1-20 kérdéssel.
+- Kvíz publikálása automatikusan generált PIN-kóddal.
+- Élő játék indítása, aktuális kérdés lezárása és következő kérdésre léptetés.
+- Saját kvíz részletes adatainak megtekintése.
 
-### Resztvevo
+### Résztvevő
 
-- Publikalt kvizek bongeszese.
-- Csatlakozas PIN-koddal es egyedi becenevvel.
-- Aktualis kerdes kovetese valos idoben.
-- Valasz kivalasztasa kliens oldali allapotmegorzessel.
-- Helyes valasz megtekintese a kerdes lezarasa utan.
-- Elo chat hasznalata a kviz alatt.
+- Publikált kvízek böngészése.
+- Csatlakozás PIN-kóddal és egyedi becenévvel.
+- Aktuális kérdés követése valós időben.
+- Válasz kiválasztása kliens oldali állapotmegőrzéssel.
+- Helyes válasz megtekintése a kérdés lezárása után.
+- Élő chat használata a kvíz alatt.
 
-## Technologiai stack
+## Technológiai stack
 
 ### Backend
 
@@ -60,81 +60,81 @@ A projekt celja egy olyan kliens-szerver architekturaju webalkalmazas megvalosit
 - Bootstrap 5
 - Microsoft SignalR JavaScript client
 
-## Architekturális felépítés
+## Architektúra
 
 ```text
 Quiz.sln
-├── Quiz.API          # HTTP API, autentikacio, Swagger, SignalR hub bekotese
-├── Quiz.DataAccess   # EF Core DbContext, modellek, szolgaltatasok, migraciok
-├── Quiz.Shared       # Request es response DTO-k
-├── Quiz.SignalR      # Hub es ertesitesi szolgaltatasok
-├── Quiz.Web          # Vue + Vite frontend
-├── Quiz.Test         # unit, controller es integracios tesztek
-└── Quiz.Console      # kiegeszito konzolos projekt
++-- Quiz.API          # HTTP API, autentikáció, Swagger, SignalR hub bekötése
++-- Quiz.DataAccess   # EF Core DbContext, modellek, szolgáltatások, migrációk
++-- Quiz.Shared       # Request és response DTO-k
++-- Quiz.SignalR      # Hub és értesítési szolgáltatások
++-- Quiz.Web          # Vue + Vite frontend
++-- Quiz.Test         # Unit, controller és integrációs tesztek
++-- Quiz.Console      # Kiegészítő konzolos projekt
 ```
 
-A megoldas retegezett felepitest kovet. Az API kontrollerek csak a HTTP feluletet kezelik, az uzleti logika a DataAccess szolgaltatasaiban talalhato, a kliens es szerver kozotti szerzodeseket pedig a Shared projekt DTO-i irjak le. A valos ideju eseményeket a SignalR modul kuldi ki a kvizhez tartozo csoportoknak.
+A megoldás rétegzett felépítést követ. Az API kontrollerek a HTTP felületet kezelik, az üzleti logika a DataAccess szolgáltatásaiban található, a kliens és szerver közötti szerződéseket pedig a Shared projekt DTO-i írják le. A valós idejű eseményeket a SignalR modul küldi ki a kvízhez tartozó csoportoknak.
 
-## Fontosabb szakmai megoldasok
+## Fontosabb szakmai megoldások
 
-- **JWT es refresh token kezeles:** a bejelentkezes access tokent es refresh tokent ad vissza, a kliens pedig 401 valasz eseten automatikusan frissiti az access tokent.
-- **SignalR csoportok:** minden kviz sajat SignalR csoportot kap, igy az inditas, kerdeslezaras, kerdesvaltas es uj chatuzenet csak az adott kviz resztvevoihez jut el.
-- **Problem Details hibakezeles:** a kozponti exception handler konzisztens JSON hibavalaszokat ad vissza.
-- **Lapozott listak:** a publikus kvizek es a felhasznalo sajat kvizei page alapjan kerulnek betoltesre.
-- **Tesztelheto felepites:** a szolgaltatasok interface-ek mogott vannak, a tesztek in-memory adatbazissal es mockolt fuggosegekkel futnak.
-- **Kliens oldali allapotmegorzes:** a bejelentkezett felhasznalo, a csatlakozott kviz es a kivalasztott valasz localStorage-ban is tarolodik, igy oldalfrissites utan is folytathato a munkamenet.
+- **JWT és refresh token kezelés:** a bejelentkezés access tokent és refresh tokent ad vissza, a kliens pedig 401 válasz esetén automatikusan frissíti az access tokent.
+- **SignalR csoportok:** minden kvíz saját SignalR csoportot kap, így az indítás, kérdéslezárás, kérdésváltás és új chatüzenet csak az adott kvíz résztvevőihez jut el.
+- **Problem Details hibakezelés:** a központi exception handler konzisztens JSON hibaválaszokat ad vissza.
+- **Lapozott listák:** a publikus kvízek és a felhasználó saját kvízei page alapján kerülnek betöltésre.
+- **Tesztelhető felépítés:** a szolgáltatások interface-ek mögött vannak, a tesztek in-memory adatbázissal és mockolt függőségekkel futnak.
+- **Kliens oldali állapotmegőrzés:** a bejelentkezett felhasználó, a csatlakozott kvíz és a kiválasztott válasz localStorage-ban is tárolódik, így oldalfrissítés után is folytatható a munkamenet.
 
-## API attekintes
+## API áttekintés
 
-### Felhasznalok - `/users`
+### Felhasználók - `/users`
 
-| Metodus | Vegpont | Leiras | Auth |
+| Metódus | Végpont | Leírás | Auth |
 | --- | --- | --- | --- |
-| POST | `/register` | Uj felhasznalo regisztralasa | Nem |
-| POST | `/login` | Bejelentkezes access es refresh tokennel | Nem |
-| POST | `/logout` | Kijelentkezes es refresh token torlese | Igen |
-| POST | `/refresh` | Uj access es refresh token igenylese | Nem |
-| GET | `/{userId}` | Bejelentkezett felhasznalo sajat adatainak es kvizeinek lekérése | Igen |
+| POST | `/register` | Új felhasználó regisztrálása | Nem |
+| POST | `/login` | Bejelentkezés access és refresh tokennel | Nem |
+| POST | `/logout` | Kijelentkezés és refresh token törlése | Igen |
+| POST | `/refresh` | Új access és refresh token igénylése | Nem |
+| GET | `/{userId}` | Bejelentkezett felhasználó saját adatainak és kvízeinek lekérése | Igen |
 
-### Kvizek - `/quizzes`
+### Kvízek - `/quizzes`
 
-| Metodus | Vegpont | Leiras | Auth |
+| Metódus | Végpont | Leírás | Auth |
 | --- | --- | --- | --- |
-| GET | `/` | Publikalt kvizek listazasa lapozassal | Nem |
-| POST | `/{quizId}` | Csatlakozott kviz adatainak szinkronizalasa | Nem |
-| POST | `/create` | Uj kviz letrehozasa | Igen |
-| GET | `/{quizId}/publish` | Kviz publikalasa es PIN generalasa | Igen |
-| POST | `/{quizId}/join` | Csatlakozas kvizhez PIN-koddal | Nem |
-| GET | `/{quizId}/start` | Kviz inditasa | Igen |
-| POST | `/{quizId}/activeQuestion` | Aktualis kerdes lekérése | Nem |
-| GET | `/{quizId}/closeQuestion` | Aktualis kerdes lezarasa | Igen |
-| GET | `/{quizId}/nextQuestion` | Kovetkezo kerdesre leptetes | Igen |
-| POST | `/{quizId}/activeQuestion/answer` | Helyes valasz indexenek lekérése | Nem |
-| POST | `/{quizId}/chat` | Chat uzenet kuldese | Nem |
-| GET | `/my-quizzes/{quizId}` | Sajat kviz reszletes adatainak lekérése | Igen |
+| GET | `/` | Publikált kvízek listázása lapozással | Nem |
+| POST | `/{quizId}` | Csatlakozott kvíz adatainak szinkronizálása | Nem |
+| POST | `/create` | Új kvíz létrehozása | Igen |
+| GET | `/{quizId}/publish` | Kvíz publikálása és PIN generálása | Igen |
+| POST | `/{quizId}/join` | Csatlakozás kvízhez PIN-kóddal | Nem |
+| GET | `/{quizId}/start` | Kvíz indítása | Igen |
+| POST | `/{quizId}/activeQuestion` | Aktuális kérdés lekérése | Nem |
+| GET | `/{quizId}/closeQuestion` | Aktuális kérdés lezárása | Igen |
+| GET | `/{quizId}/nextQuestion` | Következő kérdésre léptetés | Igen |
+| POST | `/{quizId}/activeQuestion/answer` | Helyes válasz indexének lekérése | Nem |
+| POST | `/{quizId}/chat` | Chatüzenet küldése | Nem |
+| GET | `/my-quizzes/{quizId}` | Saját kvíz részletes adatainak lekérése | Igen |
 
-## Validacios szabalyok
+## Validációs szabályok
 
-- Felhasznalonev vagy becenev: 3-255 karakter.
-- E-mail: ervenyes e-mail formatum.
-- Jelszo: legalabb 6 karakter, kisbetu, nagybetu, szam es specialis karakter.
-- Kviz cim: 3-255 karakter.
-- Kviz kerdesek szama: 1-20.
-- Kerdes szovege: 3-255 karakter.
-- Valaszok szama: 2-4.
-- PIN: hat szamjegyu kod.
+- Felhasználónév vagy becenév: 3-255 karakter.
+- E-mail: érvényes e-mail formátum.
+- Jelszó: legalább 6 karakter, kisbetű, nagybetű, szám és speciális karakter.
+- Kvíz címe: 3-255 karakter.
+- Kvíz kérdéseinek száma: 1-20.
+- Kérdés szövege: 3-255 karakter.
+- Válaszok száma: 2-4.
+- PIN: hat számjegyű kód.
 
-## Futtatas fejlesztoi kornyezetben
+## Futtatás fejlesztői környezetben
 
-### Elokovetelmenyek
+### Előkövetelmények
 
 - .NET 8 SDK
 - Node.js 20.19+ vagy 22.12+
 - SQL Server vagy SQL Server LocalDB
 
-### Backend inditasa
+### Backend indítása
 
-1. Allitsd be a `Quiz.API/appsettings.Development.json` vagy user secrets ertekeit:
+1. Állítsd be a `Quiz.API/appsettings.Development.json` vagy user secrets értékeit:
 
 ```json
 {
@@ -149,21 +149,21 @@ A megoldas retegezett felepitest kovet. Az API kontrollerek csak a HTTP felulete
 }
 ```
 
-2. Adatbazis migracio futtatasa:
+2. Adatbázis migráció futtatása:
 
 ```powershell
 dotnet ef database update --project Quiz.DataAccess --startup-project Quiz.API
 ```
 
-3. API inditasa:
+3. API indítása:
 
 ```powershell
 dotnet run --project Quiz.API
 ```
 
-Fejlesztoi modban a Swagger felulet a futtatott API `/swagger` utvonalán érheto el.
+Fejlesztői módban a Swagger felület a futtatott API `/swagger` útvonalán érhető el.
 
-### Frontend inditasa
+### Frontend indítása
 
 ```powershell
 cd Quiz.Web
@@ -171,23 +171,23 @@ npm install
 npm run dev
 ```
 
-A Vite fejlesztoi szerver proxyzza az API es SignalR hivasokat a `https://localhost:7181` backend fele.
+A Vite fejlesztői szerver proxyzza az API és SignalR hívásokat a `https://localhost:7181` backend felé.
 
-## Teszteles
+## Tesztelés
 
-A projektben harom tesztszint szerepel:
+A projektben három tesztszint szerepel:
 
-- **Unit tesztek:** a szolgaltatasok uzleti logikajat ellenorzik izolaltan.
-- **Controller tesztek:** a kontrollerek valaszait es hibakezeleset ellenorzik mockolt fuggosegekkel.
-- **Integracios tesztek:** valos alkalmazas-hosttal es in-memory adatbazissal ellenorzik a komponensek egyuttmukodeset.
+- **Unit tesztek:** a szolgáltatások üzleti logikáját ellenőrzik izoláltan.
+- **Controller tesztek:** a kontrollerek válaszait és hibakezelését ellenőrzik mockolt függőségekkel.
+- **Integrációs tesztek:** valós alkalmazás-hosttal és in-memory adatbázissal ellenőrzik a komponensek együttműködését.
 
-Futtatas:
+Futtatás:
 
 ```powershell
 dotnet test
 ```
 
-Frontend ellenorzes:
+Frontend ellenőrzés:
 
 ```powershell
 cd Quiz.Web
@@ -195,36 +195,36 @@ npm run build
 npm run lint
 ```
 
-## Demonstralhato felhasznaloi folyamat
+## Demonstrálható felhasználói folyamat
 
-1. A kvizgazda regisztral es bejelentkezik.
-2. Letrehoz egy uj kvizt tobb kerdessel.
-3. Publikalja a kvizt, a rendszer PIN-kodot general.
-4. A resztvevok a publikus listabol vagy azonosito alapjan csatlakoznak becenevvel es PIN-koddal.
-5. A kvizgazda elinditja a jatekot.
-6. A resztvevok valos idoben megkapjak az aktualis kerdest.
-7. A gazda lezarja a kerdest, a kliensek megjelenitik a helyes valaszt.
-8. A gazda a kovetkezo kerdesre leptet, vagy az utolso kerdes utan lezárja a kvizt.
+1. A kvízgazda regisztrál és bejelentkezik.
+2. Létrehoz egy új kvízt több kérdéssel.
+3. Publikálja a kvízt, a rendszer PIN-kódot generál.
+4. A résztvevők a publikus listából vagy azonosító alapján csatlakoznak becenévvel és PIN-kóddal.
+5. A kvízgazda elindítja a játékot.
+6. A résztvevők valós időben megkapják az aktuális kérdést.
+7. A gazda lezárja a kérdést, a kliensek megjelenítik a helyes választ.
+8. A gazda a következő kérdésre léptet, vagy az utolsó kérdés után lezárja a kvízt.
 
-## Portfolió szempontból kiemelheto
+## Portfólió szempontból kiemelhető
 
-Ez a projekt jol demonstralja, hogyan lehet egy modern webalkalmazasban osszekotni a klasszikus REST API-kat a valos ideju kommunikacioval. A megoldas nem csak CRUD feluleteket tartalmaz, hanem allapotgepet koveto uzleti folyamatot, szerepkorok szerinti jogosultsagkezelest, hibakezelest, tokenfrissitest, frontend allapotkezelest es automatizalt tesztelest is.
+Ez a projekt jól demonstrálja, hogyan lehet egy modern webalkalmazásban összekötni a klasszikus REST API-kat a valós idejű kommunikációval. A megoldás nem csak CRUD felületeket tartalmaz, hanem állapotgépet követő üzleti folyamatot, szerepkörök szerinti jogosultságkezelést, hibakezelést, tokenfrissítést, frontend állapotkezelést és automatizált tesztelést is.
 
-Kulonosen erdekes reszei:
+Különösen érdekes részei:
 
-- valos ideju kvízesemenyek SignalR-rel,
-- JWT + refresh token alapu authentikacio,
-- resztvevoi munkamenet kezelese bejelentkezes nelkul,
-- REST es websocket jellegu mukodes egy alkalmazasban,
-- retegezett .NET architektura,
-- Vue 3 + Pinia kliensoldali allapotkezeles,
-- unit, controller es integracios tesztek egy projektben.
+- valós idejű kvízesemények SignalR-rel,
+- JWT + refresh token alapú autentikáció,
+- résztvevői munkamenet kezelése bejelentkezés nélkül,
+- REST és websocket jellegű működés egy alkalmazásban,
+- rétegzett .NET architektúra,
+- Vue 3 + Pinia kliensoldali állapotkezelés,
+- unit, controller és integrációs tesztek egy projektben.
 
-## Tovabbfejlesztesi lehetosegek
+## Továbbfejlesztési lehetőségek
 
-- Pontszamitas es eredmenytabla bevezetese.
-- Idozito kerdesenkent.
-- Admin felulet felhasznalok es kvizek moderálásához.
+- Pontszámítás és eredménytábla bevezetése.
+- Időzítő kérdésenként.
+- Admin felület felhasználók és kvízek moderálásához.
 - Docker Compose alapú lokális futtatás SQL Server konténerrel.
-- CI pipeline automatikus builddel es tesztfuttatassal.
-- Reszletesebb OpenAPI peldak request/response mintakkal.
+- CI pipeline automatikus builddel és tesztfuttatással.
+- Részletesebb OpenAPI példák request/response mintákkal.
